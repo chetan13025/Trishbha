@@ -6,6 +6,41 @@
 <title>TRISHBHA — 3D Printing Studio</title>
 <style>
 :root{--bg:#07111c;--panel:#101d2a;--panel2:#142535;--cyan:#36b9ce;--cyan2:#8be7f1;--text:#f1f7fa;--muted:#9db0bf;--line:#25394a;--black:#04090e;--radius:18px}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}button,input,select{font:inherit}button{cursor:pointer}.wrap{max-width:1180px;margin:auto;padding:0 24px}.top{background:#0d1b28;border-bottom:1px solid var(--line);color:var(--cyan2);text-align:center;padding:8px;font-size:11px;letter-spacing:.13em}.nav{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 0}.brand{display:flex;align-items:center;gap:11px;color:var(--text);font-size:20px;font-weight:850;letter-spacing:.1em}.brandmark{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--cyan);color:#04121b;font-weight:950;font-size:22px}.brand small{display:block;font-size:9px;letter-spacing:.18em;color:var(--muted);font-weight:600}.links{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.navbtn,.ghost{background:transparent;color:#c5d2dc;border:1px solid transparent;padding:9px 12px;border-radius:10px}.navbtn:hover,.navbtn.active{color:var(--cyan2);background:#102a38;border-color:#214958}.primary{background:var(--cyan);color:#04131b;border:0;border-radius:11px;padding:11px 16px;font-weight:800;box-shadow:0 6px 24px #36b9ce20}.primary:hover{background:var(--cyan2);transform:translateY(-1px)}.outline{background:transparent;border:1px solid #426274;color:var(--text);border-radius:11px;padding:10px 15px}.outline:hover{border-color:var(--cyan);color:var(--cyan2)}.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:center;padding:55px 0 65px}.eyebrow{color:var(--cyan);font-size:11px;font-weight:850;letter-spacing:.18em;text-transform:uppercase}.hero h1{font-size:clamp(42px,6vw,70px);line-height:1.02;letter-spacing:-.055em;margin:17px 0}.hero h1 span{color:var(--cyan)}.lead{font-size:17px;color:var(--muted);max-width:560px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0}.stats{display:flex;gap:34px;margin-top:34px}.stats b{display:block;font-size:23px;color:var(--cyan2)}.stats small{color:var(--muted)}.hero-art{min-height:380px;border:1px solid #244355;border-radius:26px;position:relative;overflow:hidden;background:radial-gradient(circle at 60% 45%,#155166 0,#102b3a 27%,#091722 65%);display:grid;place-items:center}.hero-art:before,.hero-art:after{content:"";position:absolute;border:1px solid #36b9ce55;border-radius:50%;width:290px;height:290px;transform:rotateX(68deg)}.hero-art:after{width:370px;height:370px}.printer{position:relative;width:220px;height:245px;border:8px solid #718d9a;border-bottom-width:12px;border-radius:12px 12px 8px 8px;box-shadow:0 0 45px #36b9ce35;z-index:1}.printer:before{content:"";position:absolute;left:22px;right:22px;top:20px;height:155px;border:3px solid #456575;background:linear-gradient(135deg,#102735aa,#06121caa)}.printer:after{content:"";position:absolute;left:45px;right:45px;bottom:22px;height:7px;background:var(--cyan);box-shadow:0 0 18px var(--cyan)}.nozzle{position:absolute;z-index:2;top:45px;left:92px;width:28px;height:35px;background:linear-gradient(90deg,#a6b7bd,#526b78);clip-path:polygon(0 0,100% 0,75% 75%,55% 100%,45% 100%,25% 75%)}.filament{position:absolute;z-index:2;left:105px;top:79px;height:88px;width:4px;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}.printobj{position:absolute;z-index:2;bottom:43px;left:76px;width:70px;height:55px;background:repeating-linear-gradient(0deg,#36b9ce,#36b9ce 3px,#16889e 3px,#16889e 6px);clip-path:polygon(50% 0,100% 28%,88% 100%,12% 100%,0 28%)}.float{position:absolute;z-index:3;background:#102b3aee;border:1px solid #2e6879;padding:10px 13px;border-radius:12px;color:var(--cyan2);font-size:12px}.float.one{top:45px;left:25px}.float.two{right:22px;bottom:45px}.section{padding:32px 0 56px}.sectionhead{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:22px}.section h2{font-size:30px;letter-spacing:-.035em;margin:5px 0}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:15px;transition:.2s}.card:hover{transform:translateY(-4px);border-color:#39788a;box-shadow:0 12px 30px #0004}.productart{height:165px;border-radius:13px;background:radial-gradient(circle at 50% 40%,#24536a,#102331 72%);display:grid;place-items:center;position:relative;overflow:hidden}.productart .shape{font-size:74px;filter:drop-shadow(0 12px 12px #0008);color:var(--cyan2)}.tag{position:absolute;top:11px;left:11px;background:#153b49;color:var(--cyan2);border:1px solid #2b6d7c;border-radius:30px;padding:4px 9px;font-size:9px;font-weight:800;letter-spacing:.08em}.card h3{font-size:16px;margin:13px 0 3px}.price{color:var(--cyan2);font-size:20px;font-weight:850}.cardfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}.smallbtn{padding:8px 11px;font-size:12px}.features{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.feature{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:19px}.feature .ico{font-size:25px;color:var(--cyan)}.feature h3{margin:10px 0 4px}.feature p{margin:0;color:var(--muted);font-size:13px}.techgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.tech{background:#0c1a26;border:1px solid var(--line);border-radius:14px;padding:17px}.tech b{color:var(--cyan2);font-size:17px}.tech small{display:block;color:var(--muted);margin-top:5px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field label{display:block;font-size:12px;color:#bdcbd5;margin-bottom:7px}.field input,.field select{width:100%;background:#081520;color:var(--text);border:1px solid #304858;border-radius:10px;padding:11px 12px;outline:none}.field input:focus,.field select:focus{border-color:var(--cyan)}.field input[type=range]{padding:0;accent-color:var(--cyan)}.full{grid-column:1/-1}.quoteout{background:#07131e;border:1px solid #285363;border-radius:15px;padding:19px;margin-top:18px}.quoteout strong{font-size:32px;color:var(--cyan2)}.upload{border:1px dashed #477080;border-radius:14px;padding:25px;text-align:center;background:#0a1924}.upload input{max-width:100%;margin-top:12px}.cartrow{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);gap:14px}.qty{display:flex;gap:8px;align-items:center}.qty button{border:1px solid #456070;background:#0a1924;color:white;border-radius:8px;width:28px;height:28px}.notice{padding:12px 14px;border:1px solid #347080;background:#10303b;border-radius:11px;color:#b5f1f6;margin:12px 0}.hidden{display:none!important}.footer{border-top:1px solid var(--line);background:#050d15;padding:32px 0;margin-top:40px}.footerinner{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.mobilemenu{display:none}@media(max-width:800px){.hero{grid-template-columns:1fr;padding:35px 0}.hero-art{min-height:310px}.grid{grid-template-columns:repeat(2,1fr)}.features{grid-template-columns:repeat(2,1fr)}.techgrid{grid-template-columns:repeat(2,1fr)}.links{display:none}.links.open{display:flex;position:absolute;z-index:10;top:115px;left:20px;right:20px;background:#10202e;border:1px solid var(--line);padding:12px;border-radius:14px;flex-direction:column;align-items:stretch}.mobilemenu{display:inline-flex}.stats{gap:20px}.formgrid{grid-template-columns:1fr}}@media(max-width:480px){.wrap{padding:0 16px}.grid{grid-template-columns:1fr 1fr;gap:10px}.card{padding:10px}.productart{height:125px}.card h3{font-size:13px}.hero h1{font-size:46px}.features{grid-template-columns:1fr 1fr}.stats{gap:13px}.stats b{font-size:19px}.section h2{font-size:25px}}
+
+/* Motion system: subtle, purposeful, and reduced-motion friendly */
+@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+@keyframes orbitSpin{from{transform:rotateX(68deg) rotateZ(0)}to{transform:rotateX(68deg) rotateZ(360deg)}}
+@keyframes badgeDrift{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes filamentPulse{0%,100%{opacity:.55;box-shadow:0 0 7px var(--cyan)}50%{opacity:1;box-shadow:0 0 20px var(--cyan),0 0 34px #36b9ce66}}
+@keyframes printGlow{0%,100%{filter:drop-shadow(0 0 4px #36b9ce55)}50%{filter:drop-shadow(0 0 16px #36b9ceaa)}}
+@keyframes revealUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sheen{0%{background-position:180% 0}100%{background-position:-180% 0}}
+.hero-art:before{animation:orbitSpin 28s linear infinite}
+.hero-art:after{animation:orbitSpin 38s linear infinite reverse}
+.printer{animation:heroFloat 5s ease-in-out infinite}
+.filament{animation:filamentPulse 2.4s ease-in-out infinite}
+.printobj{animation:printGlow 3s ease-in-out infinite}
+.float.one{animation:badgeDrift 4.2s ease-in-out infinite}
+.float.two{animation:badgeDrift 4.8s ease-in-out infinite reverse}
+.primary,.outline,.navbtn,.smallbtn{transition:transform .25s ease,background-color .25s ease,color .25s ease,border-color .25s ease,box-shadow .25s ease}
+.primary:hover{box-shadow:0 10px 28px #36b9ce35}
+.card{will-change:transform}
+.productart .shape{transition:transform .35s cubic-bezier(.2,.8,.2,1),filter .35s ease}
+.card:hover .productart .shape{transform:scale(1.13) rotate(-4deg);filter:drop-shadow(0 16px 15px #0009)}
+.feature,.tech{transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease}
+.feature:hover,.tech:hover{transform:translateY(-5px);border-color:#39788a;box-shadow:0 12px 26px #0003}
+.sectionhead .outline:hover,.outline:hover{transform:translateY(-2px)}
+.reveal-ready .reveal{opacity:0;transform:translateY(22px)}
+.reveal-ready .reveal.is-visible{animation:revealUp .7s cubic-bezier(.2,.7,.2,1) both}
+.reveal-ready .reveal-stagger > *{opacity:0;transform:translateY(18px)}
+.reveal-ready .reveal-stagger.is-visible > *{animation:revealUp .6s cubic-bezier(.2,.7,.2,1) both}
+.reveal-ready .reveal-stagger.is-visible > *:nth-child(2){animation-delay:.08s}
+.reveal-ready .reveal-stagger.is-visible > *:nth-child(3){animation-delay:.16s}
+.reveal-ready .reveal-stagger.is-visible > *:nth-child(4){animation-delay:.24s}
+.reveal-ready .reveal-stagger.is-visible > *:nth-child(5){animation-delay:.32s}
+.reveal-ready .reveal-stagger.is-visible > *:nth-child(6){animation-delay:.4s}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.reveal-ready .reveal,.reveal-ready .reveal-stagger>*{opacity:1!important;transform:none!important}}
+
 </style>
 </head>
 <body>
@@ -41,6 +76,27 @@ function fileChosen(){let f=document.getElementById('model').files[0];document.g
 function requestQuote(){let f=document.getElementById('model').files[0],msg=document.getElementById('quoteMessage');msg.innerHTML='<div class="notice">Your estimate is ₹'+document.getElementById('estimate').textContent.replace('₹','')+'. '+(f?'Selected file: '+f.name+'. ':'No model file selected. ')+'This demo does not upload files to a server or submit a live quote. Contact and order workflow can be connected in production.</div>'}
 function businessRequest(){let e=document.getElementById('bizemail').value;if(!e.includes('@')){document.getElementById('bizmessage').innerHTML='<div class="notice">Please enter a valid work email.</div>';return}document.getElementById('bizmessage').innerHTML='<div class="notice">Enquiry details prepared for '+e+'. Live submission will be enabled when the backend is connected.</div>'}
 function toast(s){let n=document.createElement('div');n.className='notice';n.textContent=s;n.style.position='fixed';n.style.bottom='20px';n.style.right='20px';n.style.zIndex=20;document.body.appendChild(n);setTimeout(()=>n.remove(),2200)}
+
+function initMotion(){
+  document.body.classList.add('reveal-ready');
+  const targets=document.querySelectorAll('.section,.sectionhead,.hero>div,.features,.techgrid,.panel,.card');
+  targets.forEach((el,i)=>{
+    if(el.closest('.hero-art')) return;
+    el.classList.add(el.matches('.grid,.features,.techgrid')?'reveal-stagger':'reveal');
+  });
+  if(!('IntersectionObserver' in window)){
+    document.querySelectorAll('.reveal,.reveal-stagger').forEach(el=>el.classList.add('is-visible'));
+    return;
+  }
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}
+    });
+  },{threshold:.12,rootMargin:'0px 0px -35px 0px'});
+  document.querySelectorAll('.reveal,.reveal-stagger').forEach(el=>observer.observe(el));
+}
+
 setup();
+initMotion();
 </script>
 </body></html>
