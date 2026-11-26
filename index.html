@@ -129,7 +129,7 @@ const items=[{id:1,name:"Geometric Desk Organizer",cat:"Desk accessories",price:
 function productCard(p){
   const inCart=cart.find(x=>x.id===p.id);
   const control=inCart
-    ? '<div class="product-qty" aria-label="Quantity controls"><button class="qty-btn" aria-label="Decrease quantity" onclick="changeQty('+p.id+',-1)">−</button><span class="qty-value">'+inCart.qty+'</span><button class="qty-btn" aria-label="Increase quantity" onclick="changeQty('+p.id+',1,this)">+</button></div>'
+    ? '<div class="product-qty" aria-label="Quantity controls"><button class="qty-btn" aria-label="Decrease quantity" onclick="changeQty('+p.id+',-1,this)">−</button><span class="qty-value">'+inCart.qty+'</span><button class="qty-btn" aria-label="Increase quantity" onclick="changeQty('+p.id+',1,this)">+</button></div>'
     : '<button class="primary smallbtn add-btn" onclick="addCart('+p.id+',this)">Add +</button>';
   return '<article class="card"><div class="productart"><span class="tag">'+p.tag+'</span><span class="shape">'+p.symbol+'</span></div><h3>'+p.name+'</h3><div class="muted">'+p.cat+'</div><div class="cardfoot"><span class="price">₹'+p.price.toLocaleString('en-IN')+'</span>'+control+'</div></article>'
 }
@@ -186,9 +186,33 @@ function pulseCart(){
 }
 function updateCount(){document.getElementById('cartcount').textContent=cart.reduce((a,p)=>a+p.qty,0)}
 function renderCart(){let el=document.getElementById('cartcontent');if(!cart.length){el.innerHTML='<p class="muted">Your cart is empty.</p><button class="primary" onclick="show(\'shop\')">Explore products</button>';return}el.innerHTML=cart.map(p=>'<div class="cartrow"><div><b>'+p.name+'</b><div class="muted">₹'+p.price.toLocaleString('en-IN')+' each</div></div><div class="qty"><button onclick="changeQty('+p.id+',-1)">−</button>'+p.qty+'<button onclick="changeQty('+p.id+',1)">+</button></div><b>₹'+(p.price*p.qty).toLocaleString('en-IN')+'</b></div>').join('')+'<div class="cartrow"><b>Subtotal</b><strong class="price">₹'+cart.reduce((a,p)=>a+p.price*p.qty,0).toLocaleString('en-IN')+'</strong></div><p class="muted">Shipping and taxes are calculated after address confirmation.</p><button class="primary" onclick="alert(\'Checkout preview only. Connect customer accounts, inventory and a payment gateway to accept orders.\')">Continue to checkout →</button>'}
+function slideCartToProduct(control){
+  const cartTarget=document.querySelector('.cart-nav');
+  let target=control?.closest('.card');
+  if(!target&&control?.closest('.cartrow')){
+    const name=control.closest('.cartrow').querySelector('b')?.textContent?.trim();
+    target=[...document.querySelectorAll('.card')].find(card=>card.querySelector('h3')?.textContent?.trim()===name)||control.closest('.cartrow');
+  }
+  if(!target||!cartTarget||!target.animate||window.matchMedia('(prefers-reduced-motion: reduce)').matches){pulseCart();return;}
+  const from=cartTarget.getBoundingClientRect(),to=target.getBoundingClientRect();
+  const clone=target.cloneNode(true);
+  clone.classList.add('cart-fly-clone');
+  clone.style.left=from.left+'px';clone.style.top=from.top+'px';
+  clone.style.width=Math.max(44,Math.min(from.width,to.width))+'px';
+  clone.style.height=Math.max(44,Math.min(from.height,to.height))+'px';
+  document.body.appendChild(clone);
+  const dx=(to.left+to.width/2)-(from.left+from.width/2),dy=(to.top+to.height/2)-(from.top+from.height/2);
+  const animation=clone.animate([
+    {opacity:0,transform:'translate3d(0,0,0) scale(.12) rotate(8deg)'},
+    {opacity:.96,offset:.55,transform:'translate3d('+(dx*.58)+'px,'+(dy*.58-30)+'px,0) scale(.72) rotate(-3deg)'},
+    {opacity:1,transform:'translate3d('+dx+'px,'+dy+'px,0) scale(1) rotate(0deg)'}
+  ],{duration:760,easing:'cubic-bezier(.22,.72,.2,1)',fill:'forwards'});
+  animation.onfinish=()=>{clone.remove();pulseCart()};
+}
 function changeQty(id,n,control){
   let p=cart.find(x=>x.id===id);
-  if(p){p.qty+=n;if(p.qty<=0)cart=cart.filter(x=>x.id!==id)}
+  if(n<0&&control)slideCartToProduct(control);
+  if(p){p.qty+=n;if(p.qty<=0)cart=cart.filter(x=>x.id===id)}
   updateCount();
   if(n>0&&control)slideProductToCart(control);
   refreshProductCards();
