@@ -151,32 +151,43 @@ function refreshProductCards(){
   if(featured)featured.innerHTML=items.slice(0,3).map(productCard).join('');
   if(document.getElementById('products'))renderProducts();
 }
+function animateCartFlight(source,target,reverse=false,productName='3D printed product',symbol='✦'){
+  if(!source||!target||!source.animate||window.matchMedia('(prefers-reduced-motion: reduce)').matches){pulseCart();return;}
+  const a=source.getBoundingClientRect(),b=target.getBoundingClientRect();
+  if(!a.width||!a.height||!b.width||!b.height){pulseCart();return;}
+  const width=190,height=76;
+  const startX=a.left+a.width/2-width/2,startY=a.top+a.height/2-height/2;
+  const endX=b.left+b.width/2-width/2,endY=b.top+b.height/2-height/2;
+  const dx=endX-startX,dy=endY-startY;
+  const chip=document.createElement('div');
+  chip.className='cart-flight-chip';
+  chip.innerHTML='<span class="flight-symbol">'+symbol+'</span><span class="flight-name"></span>';
+  chip.querySelector('.flight-name').textContent=productName;
+  Object.assign(chip.style,{position:'fixed',left:startX+'px',top:startY+'px',width:width+'px',height:height+'px',zIndex:'99999',pointerEvents:'none',display:'flex',alignItems:'center',gap:'12px',padding:'12px',boxSizing:'border-box',borderRadius:'14px',border:'1px solid #39c6d4',background:'linear-gradient(135deg,#132b3a,#071521)',color:'#e9fbff',boxShadow:'0 16px 42px #0009',font:'600 13px/1.3 system-ui',overflow:'hidden'});
+  chip.querySelector('.flight-symbol').style.cssText='display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:10px;background:#164253;color:#7be8f0;font-size:24px';
+  chip.querySelector('.flight-name').style.cssText='min-width:0;max-height:36px;overflow:hidden';
+  document.body.appendChild(chip);
+  const frames=reverse?[
+    {opacity:0,transform:'translate3d(0,0,0) scale(.35)'},
+    {opacity:1,offset:.18,transform:'translate3d(0,0,0) scale(.72)'},
+    {opacity:1,offset:.72,transform:'translate3d('+(dx*.72)+'px,'+(dy*.72-22)+'px,0) scale(.92)'},
+    {opacity:0,transform:'translate3d('+dx+'px,'+dy+'px,0) scale(.72)'}
+  ]:[
+    {opacity:1,transform:'translate3d(0,0,0) scale(1)'},
+    {opacity:1,offset:.28,transform:'translate3d('+(dx*.28)+'px,'+(dy*.28-22)+'px,0) scale(.94)'},
+    {opacity:.9,offset:.78,transform:'translate3d('+(dx*.78)+'px,'+(dy*.78)+'px,0) scale(.72)'},
+    {opacity:0,transform:'translate3d('+dx+'px,'+dy+'px,0) scale(.35)'}
+  ];
+  const animation=chip.animate(frames,{duration:680,easing:'cubic-bezier(.22,.72,.2,1)',fill:'forwards'});
+  animation.onfinish=()=>{chip.remove();pulseCart()};
+  animation.oncancel=()=>chip.remove();
+}
 function slideProductToCart(button){
-  const card=button.closest('.card');
+  const card=button?.closest('.card');
   const cartTarget=document.querySelector('.cart-nav');
-  const count=document.getElementById('cartcount');
-  if(!card||!cartTarget||!card.animate||window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    pulseCart();return;
-  }
-  const from=card.getBoundingClientRect();
-  const to=cartTarget.getBoundingClientRect();
-  const clone=card.cloneNode(true);
-  clone.classList.add('cart-fly-clone');
-  clone.style.left=from.left+'px';clone.style.top=from.top+'px';
-  clone.style.width=from.width+'px';clone.style.height=from.height+'px';
-  document.body.appendChild(clone);
-  const dx=(to.left+to.width/2)-(from.left+from.width/2);
-  const dy=(to.top+to.height/2)-(from.top+from.height/2);
-  clone.style.setProperty('--fly-x',dx+'px');
-  clone.style.setProperty('--fly-y',dy+'px');
-  clone.style.setProperty('--fly-x-mid',(dx*.58)+'px');
-  clone.style.setProperty('--fly-y-mid',(dy*.58-34)+'px');
-  const animation=clone.animate([
-    {opacity:1,transform:'translate3d(0,0,0) scale(1) rotate(0deg)'},
-    {opacity:.96,offset:.45,transform:'translate3d('+(dx*.58)+'px,'+(dy*.58-34)+'px,0) scale(.72) rotate(-3deg)'},
-    {opacity:0,transform:'translate3d('+dx+'px,'+dy+'px,0) scale(.12) rotate(8deg)'}
-  ],{duration:760,easing:'cubic-bezier(.22,.72,.2,1)',fill:'forwards'});
-  animation.onfinish=()=>{clone.remove();pulseCart()};
+  const name=card?.querySelector('h3')?.textContent?.trim()||'3D printed product';
+  const symbol=card?.querySelector('.shape')?.textContent?.trim()||'✦';
+  animateCartFlight(card,cartTarget,false,name,symbol);
 }
 function pulseCart(){
   const nav=document.querySelector('.cart-nav');
@@ -188,29 +199,12 @@ function updateCount(){document.getElementById('cartcount').textContent=cart.red
 function renderCart(){let el=document.getElementById('cartcontent');if(!cart.length){el.innerHTML='<p class="muted">Your cart is empty.</p><button class="primary" onclick="show(\'shop\')">Explore products</button>';return}el.innerHTML=cart.map(p=>'<div class="cartrow"><div><b>'+p.name+'</b><div class="muted">₹'+p.price.toLocaleString('en-IN')+' each</div></div><div class="qty"><button onclick="changeQty('+p.id+',-1,this)">−</button>'+p.qty+'<button onclick="changeQty('+p.id+',1,this)">+</button></div><b>₹'+(p.price*p.qty).toLocaleString('en-IN')+'</b></div>').join('')+'<div class="cartrow"><b>Subtotal</b><strong class="price">₹'+cart.reduce((a,p)=>a+p.price*p.qty,0).toLocaleString('en-IN')+'</strong></div><p class="muted">Shipping and taxes are calculated after address confirmation.</p><button class="primary" onclick="alert(\'Checkout preview only. Connect customer accounts, inventory and a payment gateway to accept orders.\')">Continue to checkout →</button>'}
 function slideCartToProduct(control){
   const cartTarget=document.querySelector('.cart-nav');
-  let target=control?.closest('.card');
-  if(!target&&control?.closest('.cartrow')){
-    const row=control.closest('.cartrow');
-    const name=row.querySelector('b')?.textContent?.trim();
-    target=[...document.querySelectorAll('.card')].find(card=>card.querySelector('h3')?.textContent?.trim()===name)||row;
-  }
-  if(!target||!cartTarget||!target.animate||window.matchMedia('(prefers-reduced-motion: reduce)').matches){pulseCart();return;}
-  const from=cartTarget.getBoundingClientRect(),to=target.getBoundingClientRect();
-  const clone=target.cloneNode(true);
-  clone.classList.add('cart-fly-clone');
-  clone.style.left=(from.left+from.width/2-to.width/2)+'px';
-  clone.style.top=(from.top+from.height/2-to.height/2)+'px';
-  clone.style.width=to.width+'px';clone.style.height=to.height+'px';
-  clone.style.transformOrigin='center center';
-  document.body.appendChild(clone);
-  const dx=to.left-(from.left+from.width/2-to.width/2);
-  const dy=to.top-(from.top+from.height/2-to.height/2);
-  const animation=clone.animate([
-    {opacity:0,transform:'translate3d(0,0,0) scale(.12) rotate(8deg)'},
-    {opacity:.95,offset:.55,transform:'translate3d('+(dx*.58)+'px,'+(dy*.58-28)+'px,0) scale(.68) rotate(-3deg)'},
-    {opacity:1,transform:'translate3d('+dx+'px,'+dy+'px,0) scale(1) rotate(0deg)'}
-  ],{duration:680,easing:'cubic-bezier(.2,.75,.25,1)',fill:'forwards'});
-  animation.onfinish=()=>{clone.remove();pulseCart()};
+  const row=control?.closest('.cartrow');
+  const name=row?.querySelector('b')?.textContent?.trim();
+  const product=cart.find(x=>x.name===name);
+  const card=[...document.querySelectorAll('.card')].find(el=>el.querySelector('h3')?.textContent?.trim()===name);
+  const symbol=card?.querySelector('.shape')?.textContent?.trim()||'✦';
+  animateCartFlight(cartTarget,card||row,true,name||product?.name||'3D printed product',symbol);
 }
 function changeQty(id,n,control){
   let p=cart.find(x=>x.id===id);
