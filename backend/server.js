@@ -168,7 +168,7 @@ app.post("/api/payments/verify", auth, asyncRoute(async (req, res) => {
   const order = await Order.findOne({ razorpayOrderId: razorpay_order_id, user: req.user.id });
   if (!order) return res.status(404).json({ error: "Order not found" });
   const expected = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "").update(razorpay_order_id + "|" + razorpay_payment_id).digest("hex");
-  if (!process.env.RAZORPAY_KEY_SECRET || !crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(String(razorpay_signature || "")))) {
+  const receivedSignature = Buffer.from(String(razorpay_signature || ""));\n  const expectedSignature = Buffer.from(expected);\n  if (!process.env.RAZORPAY_KEY_SECRET || receivedSignature.length !== expectedSignature.length || !crypto.timingSafeEqual(expectedSignature, receivedSignature)) {
     order.paymentStatus = "failed"; await order.save(); return res.status(400).json({ error: "Payment signature verification failed" });
   }
   order.razorpayPaymentId = razorpay_payment_id; order.paymentStatus = "paid"; await order.save();
