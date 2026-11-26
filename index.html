@@ -98,6 +98,14 @@ header.nav{
   .cart-nav.cart-shake,#cartcount.cart-pop,.add-btn-success{animation:none!important}
 }
 
+
+/* Inline product quantity stepper */
+.product-qty{display:inline-flex;align-items:center;gap:12px;padding:4px;border:1px solid #28758a;background:#102a38;border-radius:12px;min-height:38px}
+.qty-btn{display:grid;place-items:center;width:30px;height:30px;border:0;border-radius:8px;background:var(--cyan);color:#06151d;font-size:20px;font-weight:800;cursor:pointer;transition:transform .18s ease,filter .18s ease}
+.qty-btn:hover{transform:scale(1.08);filter:brightness(1.12)}
+.qty-btn:active{transform:scale(.92)}
+.qty-value{min-width:14px;text-align:center;color:#eafaff;font-weight:800;font-variant-numeric:tabular-nums}
+
 </style>
 </head>
 <body>
@@ -118,7 +126,13 @@ header.nav{
 <footer class="footer"><div class="wrap footerinner"><div class="brand"><span class="brandmark">T</span><span>TRISHBHA<small>3D PRINTING STUDIO</small></span></div><div class="muted">Ready-made products · Custom printing · Business manufacturing</div><div class="muted">© 2026 Trishbha</div></div></footer>
 <script>
 const items=[{id:1,name:"Geometric Desk Organizer",cat:"Desk accessories",price:499,tag:"BESTSELLER",symbol:"▤"},{id:2,name:"Modern Ribbed Planter",cat:"Home decor",price:799,tag:"POPULAR",symbol:"◈"},{id:3,name:"Articulated Dragon",cat:"Miniatures",price:1299,tag:"TRENDING",symbol:"♜"},{id:4,name:"Mechanical Phone Stand",cat:"Desk accessories",price:349,tag:"NEW",symbol:"▱"},{id:5,name:"Architectural Scale Model",cat:"Prototypes",price:2499,tag:"PRO SERIES",symbol:"⌂"},{id:6,name:"Custom Keychain Set",cat:"Accessories",price:199,tag:"VALUE PICK",symbol:"✳"}];let cart=[];let filter="All";
-function productCard(p){return '<article class="card"><div class="productart"><span class="tag">'+p.tag+'</span><span class="shape">'+p.symbol+'</span></div><h3>'+p.name+'</h3><div class="muted">'+p.cat+'</div><div class="cardfoot"><span class="price">₹'+p.price.toLocaleString('en-IN')+'</span><button class="primary smallbtn add-btn" onclick="addCart('+p.id+',this)">Add +</button></div></article>'}
+function productCard(p){
+  const inCart=cart.find(x=>x.id===p.id);
+  const control=inCart
+    ? '<div class="product-qty" aria-label="Quantity controls"><button class="qty-btn" aria-label="Decrease quantity" onclick="changeQty('+p.id+',-1)">−</button><span class="qty-value">'+inCart.qty+'</span><button class="qty-btn" aria-label="Increase quantity" onclick="changeQty('+p.id+',1)">+</button></div>'
+    : '<button class="primary smallbtn add-btn" onclick="addCart('+p.id+',this)">Add +</button>';
+  return '<article class="card"><div class="productart"><span class="tag">'+p.tag+'</span><span class="shape">'+p.symbol+'</span></div><h3>'+p.name+'</h3><div class="muted">'+p.cat+'</div><div class="cardfoot"><span class="price">₹'+p.price.toLocaleString('en-IN')+'</span>'+control+'</div></article>'
+}
 function renderProducts(){let q=(document.getElementById('search')?.value||'').toLowerCase();let list=items.filter(p=>(filter==='All'||p.cat===filter)&&p.name.toLowerCase().includes(q));document.getElementById('products').innerHTML=list.map(productCard).join('')||'<p class="muted">No products match your search.</p>'}
 function setup(){document.getElementById('featured').innerHTML=items.slice(0,3).map(productCard).join('');let cats=['All',...new Set(items.map(p=>p.cat))];document.getElementById('filters').innerHTML=cats.map(c=>'<button class="'+(c==='All'?'primary':'outline')+' smallbtn" onclick="filter=\''+c+'\';renderProducts();setupFilters()">'+c+'</button>').join('');renderProducts();calculate()}
 function setupFilters(){document.getElementById('filters').innerHTML=['All',...new Set(items.map(p=>p.cat))].map(c=>'<button class="'+(filter===c?'primary':'outline')+' smallbtn" onclick="filter=\''+c+'\';renderProducts();setupFilters()">'+c+'</button>').join('')}
@@ -128,15 +142,14 @@ function addCart(id,button){
   const found=cart.find(x=>x.id===id);
   if(found)found.qty++;else cart.push({...p,qty:1});
   updateCount();
-  if(button){
-    const original=button.textContent;
-    button.textContent='✓ Added';
-    button.classList.add('add-btn-success');
-    button.disabled=true;
-    setTimeout(()=>{button.textContent=original;button.classList.remove('add-btn-success');button.disabled=false},950);
-    slideProductToCart(button);
-  }
+  if(button)slideProductToCart(button);
+  refreshProductCards();
   toast(p.name+' added to your cart');
+}
+function refreshProductCards(){
+  const featured=document.getElementById('featured');
+  if(featured)featured.innerHTML=items.slice(0,3).map(productCard).join('');
+  if(document.getElementById('products'))renderProducts();
 }
 function slideProductToCart(button){
   const card=button.closest('.card');
@@ -173,7 +186,13 @@ function pulseCart(){
 }
 function updateCount(){document.getElementById('cartcount').textContent=cart.reduce((a,p)=>a+p.qty,0)}
 function renderCart(){let el=document.getElementById('cartcontent');if(!cart.length){el.innerHTML='<p class="muted">Your cart is empty.</p><button class="primary" onclick="show(\'shop\')">Explore products</button>';return}el.innerHTML=cart.map(p=>'<div class="cartrow"><div><b>'+p.name+'</b><div class="muted">₹'+p.price.toLocaleString('en-IN')+' each</div></div><div class="qty"><button onclick="changeQty('+p.id+',-1)">−</button>'+p.qty+'<button onclick="changeQty('+p.id+',1)">+</button></div><b>₹'+(p.price*p.qty).toLocaleString('en-IN')+'</b></div>').join('')+'<div class="cartrow"><b>Subtotal</b><strong class="price">₹'+cart.reduce((a,p)=>a+p.price*p.qty,0).toLocaleString('en-IN')+'</strong></div><p class="muted">Shipping and taxes are calculated after address confirmation.</p><button class="primary" onclick="alert(\'Checkout preview only. Connect customer accounts, inventory and a payment gateway to accept orders.\')">Continue to checkout →</button>'}
-function changeQty(id,n){let p=cart.find(x=>x.id===id);p.qty+=n;if(p.qty<=0)cart=cart.filter(x=>x.id!==id);updateCount();renderCart()}
+function changeQty(id,n){
+  let p=cart.find(x=>x.id===id);
+  if(p){p.qty+=n;if(p.qty<=0)cart=cart.filter(x=>x.id!==id)}
+  updateCount();
+  refreshProductCards();
+  if(document.getElementById('cartcontent'))renderCart();
+}
 function calculate(){let w=+document.getElementById('weight').value,h=+document.getElementById('hours').value,q=Math.max(1,+document.getElementById('quantity').value||1),tech=document.getElementById('technology').value,mat=document.getElementById('material').value;document.getElementById('weightval').textContent=w+' g';document.getElementById('hoursval').textContent=h+' hours';let mr={PLA:2,PETG:2.8,ABS:3,TPU:4,'Standard Resin':5,'Tough Resin':8,'Engineering Resin':10},tr={FDM:1,SLA:1.8,DLP:2,SLS:3,MJF:4};let price=Math.round((w*(mr[mat]||2)+h*35)*(tr[tech]||1)*q);document.getElementById('estimate').textContent='₹'+price.toLocaleString('en-IN')}
 function updateMaterials(){let t=document.getElementById('technology').value,opts=t==='FDM'?['PLA','PETG','ABS','TPU']:t==='SLA'||t==='DLP'?['Standard Resin','Tough Resin','Engineering Resin']:['Nylon PA12','Nylon Glass Filled'];document.getElementById('material').innerHTML=opts.map(x=>'<option>'+x+'</option>').join('');calculate()}
 function fileChosen(){let f=document.getElementById('model').files[0];document.getElementById('filename').textContent=f?f.name+' · '+(f.size/1024/1024).toFixed(2)+' MB':''}
