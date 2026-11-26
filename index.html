@@ -129,7 +129,7 @@ const items=[{id:1,name:"Geometric Desk Organizer",cat:"Desk accessories",price:
 function productCard(p){
   const inCart=cart.find(x=>x.id===p.id);
   const control=inCart
-    ? '<div class="product-qty" aria-label="Quantity controls"><button class="qty-btn" aria-label="Decrease quantity" onclick="changeQty('+p.id+',-1)">−</button><span class="qty-value">'+inCart.qty+'</span><button class="qty-btn" aria-label="Increase quantity" onclick="changeQty('+p.id+',1)">+</button></div>'
+    ? '<div class="product-qty" aria-label="Quantity controls"><button class="qty-btn" aria-label="Decrease quantity" onclick="changeQty('+p.id+',-1)">−</button><span class="qty-value">'+inCart.qty+'</span><button class="qty-btn" aria-label="Increase quantity" onclick="changeQty('+p.id+',1,this)">+</button></div>'
     : '<button class="primary smallbtn add-btn" onclick="addCart('+p.id+',this)">Add +</button>';
   return '<article class="card"><div class="productart"><span class="tag">'+p.tag+'</span><span class="shape">'+p.symbol+'</span></div><h3>'+p.name+'</h3><div class="muted">'+p.cat+'</div><div class="cardfoot"><span class="price">₹'+p.price.toLocaleString('en-IN')+'</span>'+control+'</div></article>'
 }
@@ -186,10 +186,11 @@ function pulseCart(){
 }
 function updateCount(){document.getElementById('cartcount').textContent=cart.reduce((a,p)=>a+p.qty,0)}
 function renderCart(){let el=document.getElementById('cartcontent');if(!cart.length){el.innerHTML='<p class="muted">Your cart is empty.</p><button class="primary" onclick="show(\'shop\')">Explore products</button>';return}el.innerHTML=cart.map(p=>'<div class="cartrow"><div><b>'+p.name+'</b><div class="muted">₹'+p.price.toLocaleString('en-IN')+' each</div></div><div class="qty"><button onclick="changeQty('+p.id+',-1)">−</button>'+p.qty+'<button onclick="changeQty('+p.id+',1)">+</button></div><b>₹'+(p.price*p.qty).toLocaleString('en-IN')+'</b></div>').join('')+'<div class="cartrow"><b>Subtotal</b><strong class="price">₹'+cart.reduce((a,p)=>a+p.price*p.qty,0).toLocaleString('en-IN')+'</strong></div><p class="muted">Shipping and taxes are calculated after address confirmation.</p><button class="primary" onclick="alert(\'Checkout preview only. Connect customer accounts, inventory and a payment gateway to accept orders.\')">Continue to checkout →</button>'}
-function changeQty(id,n){
+function changeQty(id,n,control){
   let p=cart.find(x=>x.id===id);
   if(p){p.qty+=n;if(p.qty<=0)cart=cart.filter(x=>x.id!==id)}
   updateCount();
+  if(n>0&&control)slideProductToCart(control);
   refreshProductCards();
   if(document.getElementById('cartcontent'))renderCart();
 }
