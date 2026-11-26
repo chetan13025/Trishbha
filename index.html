@@ -207,9 +207,12 @@ function slideCartToProduct(control){
   animateCartFlight(cartTarget,card||row,true,name||product?.name||'3D printed product',symbol);
 }
 function changeQty(id,n,control){
-  let p=cart.find(x=>x.id===id);
+  const p=cart.find(x=>x.id===id);
+  if(!p)return;
+  const nextQty=Math.max(0,p.qty+n);
   if(n<0&&control)slideCartToProduct(control);
-  if(p){p.qty+=n;if(p.qty<=0)cart=cart.filter(x=>x.id===id)}
+  if(nextQty===0)cart=cart.filter(x=>x.id!==id);
+  else p.qty=nextQty;
   updateCount();
   if(n>0&&control)slideProductToCart(control);
   refreshProductCards();
